@@ -12,7 +12,7 @@ import (
 )
 
 type DB struct {
-	db *sql.DB
+	Db *sql.DB
 }
 
 func New(con *config.Config) (*DB, error) {
@@ -35,7 +35,7 @@ func New(con *config.Config) (*DB, error) {
 	}
 
 	return &DB{
-		db: connDb,
+		Db: connDb,
 	}, nil
 }
 
