@@ -1,9 +1,10 @@
 package main
 
 import (
-	"ToDoAppGrpc/internal/app"
+	"ToDoAppGrpc/internal/app/grpc"
 	"ToDoAppGrpc/internal/config"
 	"ToDoAppGrpc/internal/lib/logger/sl"
+	"ToDoAppGrpc/internal/storage/postgres"
 	"log/slog"
 	"os"
 	"strconv"
@@ -26,14 +27,19 @@ func main() {
 		log.Error("Failed load env", sl.Err(err))
 	}
 
+	db, err := postgres.New(env)
+	if err != nil {
+		log.Error("Failed connect db err: %s", sl.Err(err))
+	}
+
 	log.Info(
 		"Server config",
 		slog.String("host", env.GrpcHost),
 		slog.String("port", strconv.Itoa(env.GrpcPort)))
 
-	application := app.New(log, env)
+	application := grpc.New(log, db.Db, env)
 
-	go application.GRPCSrv.MustRun()
+	go application.MustRun()
 
 	stop := make(chan os.Signal, 1)
 
@@ -41,7 +47,7 @@ func main() {
 
 	log.Info("stopping application", slog.String("signal", sgnl.String()))
 
-	application.GRPCSrv.Stop()
+	application.Stop()
 
 	log.Info("application stopped")
 }

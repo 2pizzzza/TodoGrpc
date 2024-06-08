@@ -1,6 +1,7 @@
 package grpc
 
 import (
+	"ToDoAppGrpc/internal/config"
 	"database/sql"
 	"fmt"
 	"google.golang.org/grpc"
@@ -17,15 +18,15 @@ type App struct {
 	host       string
 }
 
-func New(log *slog.Logger, db *sql.DB, port int, host string) *App {
+func New(log *slog.Logger, db *sql.DB, cfg *config.Config) *App {
 	gRPCServer := grpc.NewServer()
 
 	return &App{
 		log:        log,
 		gRPCServer: gRPCServer,
 		db:         db,
-		port:       port,
-		host:       host,
+		port:       cfg.GrpcPort,
+		host:       cfg.GrpcHost,
 	}
 }
 
