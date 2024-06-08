@@ -19,8 +19,8 @@ generate-structs:
 .PROXY: generate
 generate:
 	mkdir -p internal/todo_v1
-	protoc --go_out=internal/todo_v1 --go_opt=paths=import \
-			--go-grpc_out=internal/todo_v1 --go-grpc_opt=paths=import \
-			proto/todo_v1/service.proto
+	protoc -I/usr/include -I. --go_out=internal/todo_v1 --go_opt=paths=import \
+		--go-grpc_out=internal/todo_v1 --go-grpc_opt=paths=import \
+		proto/todo_v1/service.proto
 	mv internal/todo_v1/ToDoAppGrpc/internal/todo_v1/* internal/todo_v1/
 	rm -rf internal/todo_v1/ToDoAppGrpc

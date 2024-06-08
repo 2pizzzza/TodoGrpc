@@ -7,7 +7,6 @@ import (
 	"ToDoAppGrpc/internal/storage/postgres"
 	"log/slog"
 	"os"
-	"strconv"
 )
 
 const (
@@ -31,11 +30,6 @@ func main() {
 	if err != nil {
 		log.Error("Failed connect db err: %s", sl.Err(err))
 	}
-
-	log.Info(
-		"Server config",
-		slog.String("host", env.GrpcHost),
-		slog.String("port", strconv.Itoa(env.GrpcPort)))
 
 	application := grpc.New(log, db.Db, env)
 

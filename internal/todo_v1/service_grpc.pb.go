@@ -19,90 +19,256 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	UserV1_GetUserInfo_FullMethodName = "/todo_v1.UserV1/GetUserInfo"
+	TodoV1_CreateTodo_FullMethodName   = "/todo_v1.TodoV1/CreateTodo"
+	TodoV1_CompleteTodo_FullMethodName = "/todo_v1.TodoV1/CompleteTodo"
+	TodoV1_GetTodoById_FullMethodName  = "/todo_v1.TodoV1/GetTodoById"
+	TodoV1_RemoveTodo_FullMethodName   = "/todo_v1.TodoV1/RemoveTodo"
+	TodoV1_ChangeTodo_FullMethodName   = "/todo_v1.TodoV1/ChangeTodo"
 )
 
-// UserV1Client is the client API for UserV1 service.
+// TodoV1Client is the client API for TodoV1 service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type UserV1Client interface {
-	GetUserInfo(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error)
+//
+// Сервис для управления задачами
+type TodoV1Client interface {
+	// Создание новой задачи
+	CreateTodo(ctx context.Context, in *CreateTodoRequest, opts ...grpc.CallOption) (*TodoResponse, error)
+	// Завершение задачи по идентификатору
+	CompleteTodo(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*TodoResponse, error)
+	// Получение задачи по идентификатору
+	GetTodoById(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*TodoResponse, error)
+	// Удаление задачи по идентификатору
+	RemoveTodo(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*InfoResponse, error)
+	// Изменение существующей задачи
+	ChangeTodo(ctx context.Context, in *ChangeTodoRequest, opts ...grpc.CallOption) (*InfoResponse, error)
 }
 
-type userV1Client struct {
+type todoV1Client struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewUserV1Client(cc grpc.ClientConnInterface) UserV1Client {
-	return &userV1Client{cc}
+func NewTodoV1Client(cc grpc.ClientConnInterface) TodoV1Client {
+	return &todoV1Client{cc}
 }
 
-func (c *userV1Client) GetUserInfo(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*GetResponse, error) {
+func (c *todoV1Client) CreateTodo(ctx context.Context, in *CreateTodoRequest, opts ...grpc.CallOption) (*TodoResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetResponse)
-	err := c.cc.Invoke(ctx, UserV1_GetUserInfo_FullMethodName, in, out, cOpts...)
+	out := new(TodoResponse)
+	err := c.cc.Invoke(ctx, TodoV1_CreateTodo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// UserV1Server is the server API for UserV1 service.
-// All implementations must embed UnimplementedUserV1Server
+func (c *todoV1Client) CompleteTodo(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*TodoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TodoResponse)
+	err := c.cc.Invoke(ctx, TodoV1_CompleteTodo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *todoV1Client) GetTodoById(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*TodoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TodoResponse)
+	err := c.cc.Invoke(ctx, TodoV1_GetTodoById_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *todoV1Client) RemoveTodo(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*InfoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(InfoResponse)
+	err := c.cc.Invoke(ctx, TodoV1_RemoveTodo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *todoV1Client) ChangeTodo(ctx context.Context, in *ChangeTodoRequest, opts ...grpc.CallOption) (*InfoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(InfoResponse)
+	err := c.cc.Invoke(ctx, TodoV1_ChangeTodo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// TodoV1Server is the server API for TodoV1 service.
+// All implementations must embed UnimplementedTodoV1Server
 // for forward compatibility
-type UserV1Server interface {
-	GetUserInfo(context.Context, *GetRequest) (*GetResponse, error)
-	mustEmbedUnimplementedUserV1Server()
+//
+// Сервис для управления задачами
+type TodoV1Server interface {
+	// Создание новой задачи
+	CreateTodo(context.Context, *CreateTodoRequest) (*TodoResponse, error)
+	// Завершение задачи по идентификатору
+	CompleteTodo(context.Context, *IdRequest) (*TodoResponse, error)
+	// Получение задачи по идентификатору
+	GetTodoById(context.Context, *IdRequest) (*TodoResponse, error)
+	// Удаление задачи по идентификатору
+	RemoveTodo(context.Context, *IdRequest) (*InfoResponse, error)
+	// Изменение существующей задачи
+	ChangeTodo(context.Context, *ChangeTodoRequest) (*InfoResponse, error)
+	mustEmbedUnimplementedTodoV1Server()
 }
 
-// UnimplementedUserV1Server must be embedded to have forward compatible implementations.
-type UnimplementedUserV1Server struct {
+// UnimplementedTodoV1Server must be embedded to have forward compatible implementations.
+type UnimplementedTodoV1Server struct {
 }
 
-func (UnimplementedUserV1Server) GetUserInfo(context.Context, *GetRequest) (*GetResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
+func (UnimplementedTodoV1Server) CreateTodo(context.Context, *CreateTodoRequest) (*TodoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateTodo not implemented")
 }
-func (UnimplementedUserV1Server) mustEmbedUnimplementedUserV1Server() {}
+func (UnimplementedTodoV1Server) CompleteTodo(context.Context, *IdRequest) (*TodoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CompleteTodo not implemented")
+}
+func (UnimplementedTodoV1Server) GetTodoById(context.Context, *IdRequest) (*TodoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTodoById not implemented")
+}
+func (UnimplementedTodoV1Server) RemoveTodo(context.Context, *IdRequest) (*InfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RemoveTodo not implemented")
+}
+func (UnimplementedTodoV1Server) ChangeTodo(context.Context, *ChangeTodoRequest) (*InfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeTodo not implemented")
+}
+func (UnimplementedTodoV1Server) mustEmbedUnimplementedTodoV1Server() {}
 
-// UnsafeUserV1Server may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to UserV1Server will
+// UnsafeTodoV1Server may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TodoV1Server will
 // result in compilation errors.
-type UnsafeUserV1Server interface {
-	mustEmbedUnimplementedUserV1Server()
+type UnsafeTodoV1Server interface {
+	mustEmbedUnimplementedTodoV1Server()
 }
 
-func RegisterUserV1Server(s grpc.ServiceRegistrar, srv UserV1Server) {
-	s.RegisterService(&UserV1_ServiceDesc, srv)
+func RegisterTodoV1Server(s grpc.ServiceRegistrar, srv TodoV1Server) {
+	s.RegisterService(&TodoV1_ServiceDesc, srv)
 }
 
-func _UserV1_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetRequest)
+func _TodoV1_CreateTodo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTodoRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UserV1Server).GetUserInfo(ctx, in)
+		return srv.(TodoV1Server).CreateTodo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UserV1_GetUserInfo_FullMethodName,
+		FullMethod: TodoV1_CreateTodo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserV1Server).GetUserInfo(ctx, req.(*GetRequest))
+		return srv.(TodoV1Server).CreateTodo(ctx, req.(*CreateTodoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// UserV1_ServiceDesc is the grpc.ServiceDesc for UserV1 service.
+func _TodoV1_CompleteTodo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TodoV1Server).CompleteTodo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TodoV1_CompleteTodo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TodoV1Server).CompleteTodo(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TodoV1_GetTodoById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TodoV1Server).GetTodoById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TodoV1_GetTodoById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TodoV1Server).GetTodoById(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TodoV1_RemoveTodo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TodoV1Server).RemoveTodo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TodoV1_RemoveTodo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TodoV1Server).RemoveTodo(ctx, req.(*IdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _TodoV1_ChangeTodo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeTodoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TodoV1Server).ChangeTodo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: TodoV1_ChangeTodo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TodoV1Server).ChangeTodo(ctx, req.(*ChangeTodoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// TodoV1_ServiceDesc is the grpc.ServiceDesc for TodoV1 service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var UserV1_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "todo_v1.UserV1",
-	HandlerType: (*UserV1Server)(nil),
+var TodoV1_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "todo_v1.TodoV1",
+	HandlerType: (*TodoV1Server)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetUserInfo",
-			Handler:    _UserV1_GetUserInfo_Handler,
+			MethodName: "CreateTodo",
+			Handler:    _TodoV1_CreateTodo_Handler,
+		},
+		{
+			MethodName: "CompleteTodo",
+			Handler:    _TodoV1_CompleteTodo_Handler,
+		},
+		{
+			MethodName: "GetTodoById",
+			Handler:    _TodoV1_GetTodoById_Handler,
+		},
+		{
+			MethodName: "RemoveTodo",
+			Handler:    _TodoV1_RemoveTodo_Handler,
+		},
+		{
+			MethodName: "ChangeTodo",
+			Handler:    _TodoV1_ChangeTodo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
