@@ -1,16 +1,27 @@
 package todo
 
 import (
-	"ToDoAppGrpc/internal/todo_v1"
+	"ToDoAppGrpc/internal/domain/models"
 	"golang.org/x/net/context"
 	"log/slog"
 )
 
 type Todo struct {
 	log        *slog.Logger
-	todoCreate TodoCreate
+	todoCreate CreateTodo
 }
 
-type TodoCreate interface {
-	CreateToDo(ctx context.Context, req todo_v1.TodoResponse)
+type CreateTodo interface {
+	SaveToDo(ctx context.Context, mod models.Model) (todo models.Model, err error)
+}
+
+func New(
+	log *slog.Logger,
+	todoCreate CreateTodo,
+) *Todo {
+
+	return &Todo{
+		log:        log,
+		todoCreate: todoCreate,
+	}
 }

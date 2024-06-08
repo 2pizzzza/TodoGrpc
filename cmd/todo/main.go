@@ -4,6 +4,7 @@ import (
 	"ToDoAppGrpc/internal/app/grpc"
 	"ToDoAppGrpc/internal/config"
 	"ToDoAppGrpc/internal/lib/logger/sl"
+	"ToDoAppGrpc/internal/service/todo"
 	"ToDoAppGrpc/internal/storage/postgres"
 	"log/slog"
 	"os"
@@ -30,8 +31,8 @@ func main() {
 	if err != nil {
 		log.Error("Failed connect db err: %s", sl.Err(err))
 	}
-
-	application := grpc.New(log, db.Db, env)
+	todoService := todo.New(log, db)
+	application := grpc.New(log, todoService, db.Db, env)
 
 	go application.MustRun()
 

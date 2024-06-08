@@ -2,30 +2,30 @@ package models
 
 import "time"
 
-type Todo struct {
-	ID          int
+type Model struct {
+	ID          int `json:"id,omitempty"`
 	Title       string
 	Description string
 	Completed   bool
-	CreatedAt   time.Time
+	CreatedAt   time.Time `json:"created-at,omitempty"`
 }
 
-func (t Todo) Id() int {
+func (t Model) Id() int {
 	return t.ID
 }
 
-func (t Todo) Name() string {
+func (t Model) Name() string {
 	return t.Title
 }
 
-func (t Todo) Desc() string {
+func (t Model) Desc() string {
 	return t.Description
 }
 
-func (t Todo) IsDone() bool {
+func (t Model) IsDone() bool {
 	return t.Completed
 }
 
-func (t Todo) TimeCreat() time.Time {
+func (t Model) TimeCreat() time.Time {
 	return t.CreatedAt
 }

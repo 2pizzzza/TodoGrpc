@@ -3,7 +3,6 @@ package grpc
 import (
 	"ToDoAppGrpc/grpc/todo"
 	"ToDoAppGrpc/internal/config"
-	"ToDoAppGrpc/internal/todo_v1"
 	"database/sql"
 	"fmt"
 	"google.golang.org/grpc"
@@ -20,9 +19,9 @@ type App struct {
 	host       string
 }
 
-func New(log *slog.Logger, db *sql.DB, cfg *config.Config) *App {
+func New(log *slog.Logger, todoService todo.Todo, db *sql.DB, cfg *config.Config) *App {
 	gRPCServer := grpc.NewServer()
-
+	todo.Register(gRPCServer, todoService)
 	return &App{
 		log:        log,
 		gRPCServer: gRPCServer,
@@ -54,7 +53,6 @@ func (a *App) Run() error {
 	log.Info("gRPC server is running", slog.String("addr ", l.Addr().String()))
 
 	reflection.Register(a.gRPCServer)
-	todo_v1.RegisterTodoV1Server(a.gRPCServer, &todo.ServerAPI{})
 	if err := a.gRPCServer.Serve(l); err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
