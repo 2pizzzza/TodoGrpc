@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package todo_v1;
+
+option go_package = "ToDoAppGrpc/internal/todo_v1;todo_v1";
+
+
+service UserV1{
+  rpc GetUserInfo(GetRequest) returns (GetResponse);
+}
+message UserInfo{
+  int64 id = 1;
+  string name = 2;
+  bool is_human = 3;
+}
+
+message GetRequest{
+  int64 id = 1;
+}
+
+message GetResponse{
+  UserInfo info = 1;
+}
