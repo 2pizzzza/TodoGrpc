@@ -119,3 +119,37 @@ func (s *DB) Change(ctx context.Context, reqTodo models.Model) (models.Model, er
 
 	return reqTodo, nil
 }
+
+func (s *DB) GetAll(ctx context.Context) (todos []*models.Model, err error) {
+	const op = "storage.postgres.todo.GetAll"
+
+	var (
+		id          int
+		title       string
+		description string
+		completed   bool
+		created_at  time.Time
+	)
+
+	rows, err := s.Db.Query("SELECT * FROM todo ORDER BY id DESC ")
+	if err != nil {
+		log.Printf("failed to query do: %v", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		if err := rows.Scan(&id, &title, &description, &completed, &created_at); err != nil {
+			log.Fatal(err)
+		}
+		todos = append(todos, &models.Model{
+			ID:          id,
+			Title:       title,
+			Description: description,
+			Completed:   completed,
+			CreatedAt:   created_at,
+		})
+	}
+
+	return todos, nil
+}

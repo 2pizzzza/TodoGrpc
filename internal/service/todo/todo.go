@@ -16,6 +16,7 @@ type T interface {
 	GetById(ctx context.Context, id int) (models.Model, error)
 	Remove(ctx context.Context, id int) (message string, err error)
 	Change(ctx context.Context, reqTodo models.Model) (models.Model, error)
+	GetAll(ctx context.Context) (todos []*models.Model, err error)
 }
 
 func New(

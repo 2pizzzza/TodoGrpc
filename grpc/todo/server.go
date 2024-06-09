@@ -12,6 +12,7 @@ type Todo interface {
 	GetTodoById(ctx context.Context, id int) (todo models.Model, err error)
 	RemoveTodo(ctx context.Context, id int) (message string, err error)
 	ChangeTodo(ctx context.Context, reqTodo models.Model) (models.Model, error)
+	GetAllTodo(ctx context.Context) (todos []*models.Model, err error)
 }
 
 type ServerAPI struct {

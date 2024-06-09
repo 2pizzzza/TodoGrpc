@@ -3,6 +3,7 @@ syntax = "proto3";
 package todo_v1;
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 
 option go_package = "ToDoAppGrpc/internal/todo_v1;todo_v1";
 
@@ -22,6 +23,8 @@ service TodoV1 {
 
   // Изменение существующей задачи
   rpc ChangeTodo (ChangeTodoRequest) returns (TodoResponse);
+
+  rpc GetAllTodo (google.protobuf.Empty) returns (TodosResponse);
 }
 
 // Сообщение, представляющее задачу
@@ -31,6 +34,10 @@ message Todo {
   string description = 3;
   bool completed = 4;
   google.protobuf.Timestamp created_at = 5;
+}
+
+message TodosResponse{
+  repeated Todo todo = 1;
 }
 
 // Запрос для изменения задачи
