@@ -15,6 +15,7 @@ type T interface {
 	Save(ctx context.Context, mod models.Model) (todo models.Model, err error)
 	GetById(ctx context.Context, id int) (models.Model, error)
 	Remove(ctx context.Context, id int) (message string, err error)
+	Change(ctx context.Context, reqTodo models.Model) (models.Model, error)
 }
 
 func New(

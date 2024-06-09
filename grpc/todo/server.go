@@ -11,6 +11,7 @@ type Todo interface {
 	Create(ctx context.Context, title, description string, complete bool) (res models.Model, err error)
 	GetTodoById(ctx context.Context, id int) (todo models.Model, err error)
 	RemoveTodo(ctx context.Context, id int) (message string, err error)
+	ChangeTodo(ctx context.Context, reqTodo models.Model) (models.Model, error)
 }
 
 type ServerAPI struct {

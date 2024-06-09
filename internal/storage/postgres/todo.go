@@ -92,3 +92,30 @@ func (s *DB) Remove(ctx context.Context, id int) (message string, err error) {
 
 	return fmt.Sprintf("Successfully deleted todo id: %d", id), nil
 }
+
+func (s *DB) Change(ctx context.Context, reqTodo models.Model) (models.Model, error) {
+	const op = "storage.postgres.todo.Change"
+
+	stmt, err := s.Db.Prepare("UPDATE todo SET title = $2, description = $3, completed = $4 WHERE id = $1")
+	if err != nil {
+		return models.Model{}, fmt.Errorf("%s: %w", op, err)
+	}
+	defer stmt.Close()
+
+	res, err := stmt.Exec(reqTodo.ID, reqTodo.Title, reqTodo.Description, reqTodo.Completed)
+
+	if err != nil {
+		return models.Model{}, fmt.Errorf("%s: %w", op, err)
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return models.Model{}, fmt.Errorf("%s: %w", op, err)
+	}
+
+	if rowsAffected == 0 {
+		return models.Model{}, storage.ErrToDoNotFound
+	}
+
+	return reqTodo, nil
+}

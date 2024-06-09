@@ -41,7 +41,7 @@ type TodoV1Client interface {
 	// Удаление задачи по идентификатору
 	RemoveTodo(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*InfoResponse, error)
 	// Изменение существующей задачи
-	ChangeTodo(ctx context.Context, in *ChangeTodoRequest, opts ...grpc.CallOption) (*InfoResponse, error)
+	ChangeTodo(ctx context.Context, in *ChangeTodoRequest, opts ...grpc.CallOption) (*TodoResponse, error)
 }
 
 type todoV1Client struct {
@@ -92,9 +92,9 @@ func (c *todoV1Client) RemoveTodo(ctx context.Context, in *IdRequest, opts ...gr
 	return out, nil
 }
 
-func (c *todoV1Client) ChangeTodo(ctx context.Context, in *ChangeTodoRequest, opts ...grpc.CallOption) (*InfoResponse, error) {
+func (c *todoV1Client) ChangeTodo(ctx context.Context, in *ChangeTodoRequest, opts ...grpc.CallOption) (*TodoResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(InfoResponse)
+	out := new(TodoResponse)
 	err := c.cc.Invoke(ctx, TodoV1_ChangeTodo_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -117,7 +117,7 @@ type TodoV1Server interface {
 	// Удаление задачи по идентификатору
 	RemoveTodo(context.Context, *IdRequest) (*InfoResponse, error)
 	// Изменение существующей задачи
-	ChangeTodo(context.Context, *ChangeTodoRequest) (*InfoResponse, error)
+	ChangeTodo(context.Context, *ChangeTodoRequest) (*TodoResponse, error)
 	mustEmbedUnimplementedTodoV1Server()
 }
 
@@ -137,7 +137,7 @@ func (UnimplementedTodoV1Server) GetTodoById(context.Context, *IdRequest) (*Todo
 func (UnimplementedTodoV1Server) RemoveTodo(context.Context, *IdRequest) (*InfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveTodo not implemented")
 }
-func (UnimplementedTodoV1Server) ChangeTodo(context.Context, *ChangeTodoRequest) (*InfoResponse, error) {
+func (UnimplementedTodoV1Server) ChangeTodo(context.Context, *ChangeTodoRequest) (*TodoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangeTodo not implemented")
 }
 func (UnimplementedTodoV1Server) mustEmbedUnimplementedTodoV1Server() {}

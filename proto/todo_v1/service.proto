@@ -21,7 +21,7 @@ service TodoV1 {
   rpc RemoveTodo (IdRequest) returns (InfoResponse);
 
   // Изменение существующей задачи
-  rpc ChangeTodo (ChangeTodoRequest) returns (InfoResponse);
+  rpc ChangeTodo (ChangeTodoRequest) returns (TodoResponse);
 }
 
 // Сообщение, представляющее задачу
