@@ -27,7 +27,7 @@ func (a *Todo) Create(ctx context.Context, title, description string, complete b
 		CreatedAt:   timestamppb.New(time.Now()).AsTime(),
 	}
 
-	todo, err := a.todoCreate.SaveToDo(ctx, tempTodo)
+	todo, err := a.todoService.SaveToDo(ctx, tempTodo)
 	if err != nil {
 		log.Error("failed create todo", sl.Err(err))
 

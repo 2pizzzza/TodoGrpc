@@ -7,21 +7,23 @@ import (
 )
 
 type Todo struct {
-	log        *slog.Logger
-	todoCreate CreateTodo
+	log         *slog.Logger
+	todoService T
 }
 
-type CreateTodo interface {
+type T interface {
 	SaveToDo(ctx context.Context, mod models.Model) (todo models.Model, err error)
+	GetById(ctx context.Context, id int) (models.Model, error)
+	RemoveTodo(ctx context.Context, id int) (message string, err error)
 }
 
 func New(
 	log *slog.Logger,
-	todoCreate CreateTodo,
+	todoService T,
 ) *Todo {
 
 	return &Todo{
-		log:        log,
-		todoCreate: todoCreate,
+		log:         log,
+		todoService: todoService,
 	}
 }
