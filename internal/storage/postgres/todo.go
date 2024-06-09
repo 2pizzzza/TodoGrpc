@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func (s *DB) SaveToDo(ctx context.Context, temp models.Model) (todo models.Model, err error) {
+func (s *DB) Save(ctx context.Context, temp models.Model) (todo models.Model, err error) {
 	const op = "storage/postgres.CreateToDo"
 
 	var id int
@@ -67,25 +67,28 @@ func (s *DB) GetById(ctx context.Context, id int) (models.Model, error) {
 	return tempToDo, nil
 }
 
-func (s *DB) RemoveTodo(ctx context.Context, id int) (message string, err error) {
+func (s *DB) Remove(ctx context.Context, id int) (message string, err error) {
 	const op = "postgres.todo.RemoveTodo"
 
 	stmt, err := s.Db.Prepare("DELETE FROM todo WHERE id = $1")
-
+	if err != nil {
+		return "", fmt.Errorf("%s: %w", op, err)
+	}
 	defer stmt.Close()
 
+	res, err := stmt.Exec(id)
 	if err != nil {
 		return "", fmt.Errorf("%s: %w", op, err)
 	}
 
-	_, err = stmt.Exec(id)
-
+	rowsAffected, err := res.RowsAffected()
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return "", storage.ErrToDoNotFound
-		}
 		return "", fmt.Errorf("%s: %w", op, err)
 	}
 
-	return fmt.Sprintf("Success deleted todo id: %d", id), nil
+	if rowsAffected == 0 {
+		return "", storage.ErrToDoNotFound
+	}
+
+	return fmt.Sprintf("Successfully deleted todo id: %d", id), nil
 }

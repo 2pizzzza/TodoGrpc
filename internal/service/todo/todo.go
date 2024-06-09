@@ -12,9 +12,9 @@ type Todo struct {
 }
 
 type T interface {
-	SaveToDo(ctx context.Context, mod models.Model) (todo models.Model, err error)
+	Save(ctx context.Context, mod models.Model) (todo models.Model, err error)
 	GetById(ctx context.Context, id int) (models.Model, error)
-	RemoveTodo(ctx context.Context, id int) (message string, err error)
+	Remove(ctx context.Context, id int) (message string, err error)
 }
 
 func New(
